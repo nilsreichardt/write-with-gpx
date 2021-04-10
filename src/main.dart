@@ -6,7 +6,7 @@ const double rasterSize = 0.001000;
 
 Future<void> main() async {
   // Every item in this list is a new list
-  final List<String> text = ["Hi Florian", "Pls let me pitch"];
+  final List<String> text = ["Hi Johannes", "Pls let me pitch"];
 
   final startCoordinate = LatLon(lat: 51.267705, lon: 6.832166);
   final List<List<LatLon>> coordinates = List(text.length);
