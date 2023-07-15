@@ -6,7 +6,7 @@ const double rasterSize = 0.001000;
 
 Future<void> main() async {
   // Every item in this list is a new list
-  final List<String> text = ["Hi Johannes", "Pls let me pitch"];
+  final List<String> text = ["Hi Hanno", "any CDTM tips"];
 
   final startCoordinate = LatLon(lat: 51.267705, lon: 6.832166);
   final List<List<LatLon>> coordinates = List.filled(text.length, []);
@@ -321,6 +321,21 @@ List<LatLon> getCoordinatesOfALetter(String letter, LatLon sLatLon) {
 
   if (letter == "Y") {
     final list = <LatLon>[];
+    list.add(LatLon(lat: sLatLon.lat, lon: sLatLon.lon + (rasterSize / 2)));
+    list.add(LatLon(lat: list.last.lat + rasterSize * 1.5, lon: list.last.lon));
+    list.add(LatLon(
+        lat: list.last.lat + (rasterSize / 2),
+        lon: list.last.lon - (rasterSize / 2)));
+    list.add(LatLon(
+        lat: list.last.lat - (rasterSize / 2),
+        lon: list.last.lon + (rasterSize / 2)));
+    list.add(LatLon(
+        lat: list.last.lat + (rasterSize / 2),
+        lon: list.last.lon + (rasterSize / 2)));
+    list.add(LatLon(
+        lat: list.last.lat - (rasterSize / 2),
+        lon: list.last.lon - (rasterSize / 2)));
+    list.add(LatLon(lat: list.last.lat - rasterSize * 1.5, lon: list.last.lon));
     return list;
   }
 
