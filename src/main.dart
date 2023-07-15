@@ -43,8 +43,11 @@ Future<void> main() async {
           lon: coordinates[line].last.lon,
         ),
       );
+      // If you want to move the start of the next line to the left, you can
+      // change the value of the second parameter of the next line.
       list.add(LatLon(
-          lat: list.last.lat, lon: coordinates[line].first.lon - rasterSize));
+          lat: list.last.lat,
+          lon: coordinates[line].first.lon - (rasterSize * 4)));
       list.add(
           LatLon(lat: list.last.lat - (rasterSize * 3), lon: list.last.lon));
       list.add(LatLon(lat: list.last.lat, lon: list.last.lon + rasterSize));
