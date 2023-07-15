@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'lat_lon.dart';
 
@@ -8,7 +9,7 @@ Future<void> main() async {
   // Every item in this list is a new list
   final List<String> text = ["Hi Hanno", "any CDTM tips"];
 
-  final startCoordinate = LatLon(lat: 51.267705, lon: 6.832166);
+  final startCoordinate = LatLon(lat: 48.081544, lon: 11.565858);
   final List<List<LatLon>> coordinates = List.filled(text.length, []);
   coordinates[0] = [startCoordinate];
 
@@ -65,25 +66,35 @@ Future<void> createGpxFile(List<List<LatLon>> coordinates) async {
 
   // Every track point in a gpx file needs a timestamp. Every track point should
   // have a gap of one minute.
-  DateTime tempDate = DateTime.now().subtract(Duration(hours: 2));
+  DateTime tempDate = DateTime.now().subtract(Duration(hours: 7)).toUtc();
 
   final String fileBeginning =
       '<?xml version="1.0" encoding="UTF-8"?><gpx creator="StravaGPX" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" xmlns="http://www.topografix.com/GPX/1/1"><metadata><time>${tempDate.toIso8601String()}</time></metadata><trk><name>Scripting...</name><type>1</type><trkseg>';
   xmlString += fileBeginning;
 
-  coordinates.forEach((line) {
-    line.forEach((letter) {
+  for (final line in coordinates) {
+    for (final letter in line) {
       xmlString +=
-          '<trkpt lat="${letter.lat}" lon="${letter.lon}"><ele>50.0</ele><time>${tempDate.toIso8601String()}</time></trkpt>';
-      tempDate = tempDate.add(Duration(minutes: 1));
-    });
-  });
+          '<trkpt lat="${makeDoubleFuzzy(letter.lat)}" lon="${makeDoubleFuzzy(letter.lon)}"><ele>50.0</ele><time>${tempDate.toIso8601String()}</time></trkpt>';
+      tempDate = tempDate.add(Duration(minutes: Random().nextInt(10) + 3));
+    }
+  }
 
   final String fileEnding = '</trkseg></trk></gpx>';
   xmlString += fileEnding;
 
   await File("output.gpx").writeAsString(xmlString);
   print("Generated GPX file ✅");
+}
+
+/// This function makes a double value a little bit fuzzy to make it look more
+/// realistic.
+double makeDoubleFuzzy(double value) {
+  final randomBool = Random().nextBool();
+  if (randomBool) {
+    return value - (Random().nextDouble() / 11000);
+  }
+  return value + (Random().nextDouble() / 11000);
 }
 
 List<LatLon> getCoordinatesOfALetter(String letter, LatLon sLatLon) {
@@ -127,6 +138,16 @@ List<LatLon> getCoordinatesOfALetter(String letter, LatLon sLatLon) {
 
   if (letter == "D") {
     final list = <LatLon>[];
+    list.add(LatLon(lat: sLatLon.lat + (rasterSize * 2), lon: sLatLon.lon));
+    list.add(LatLon(
+        lat: list.last.lat - (rasterSize / 3),
+        lon: list.last.lon + rasterSize));
+    list.add(
+        LatLon(lat: list.last.lat - rasterSize * 1.34, lon: list.last.lon));
+    list.add(LatLon(
+        lat: list.last.lat - (rasterSize / 3),
+        lon: list.last.lon - rasterSize));
+    list.add(LatLon(lat: list.last.lat, lon: list.last.lon + rasterSize * 0.5));
     return list;
   }
 
