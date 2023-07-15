@@ -9,7 +9,7 @@ Future<void> main() async {
   final List<String> text = ["Hi Johannes", "Pls let me pitch"];
 
   final startCoordinate = LatLon(lat: 51.267705, lon: 6.832166);
-  final List<List<LatLon>> coordinates = List(text.length);
+  final List<List<LatLon>> coordinates = List.filled(text.length, []);
   coordinates[0] = [startCoordinate];
 
   for (var line = 0; line < text.length; line++) {
@@ -21,6 +21,7 @@ Future<void> main() async {
             getCoordinatesOfALetter(letter, coordinates[line].last);
       } catch (e) {
         print("Skiping '$letter', because: '$e'");
+        return;
       }
       coordinates[line].addAll(letterCoordinates);
 

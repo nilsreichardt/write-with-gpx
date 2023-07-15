@@ -1,12 +1,10 @@
-import 'package:meta/meta.dart';
-
 class LatLon {
   final double lat;
   final double lon;
 
   const LatLon({
-    @required this.lat,
-    @required this.lon,
+    required this.lat,
+    required this.lon,
   });
 
   @override
