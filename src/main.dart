@@ -74,9 +74,11 @@ Future<void> createGpxFile(List<List<LatLon>> coordinates) async {
 
   for (final line in coordinates) {
     for (final letter in line) {
+      final elevationBase = 520;
+      final randomElevation = elevationBase + Random().nextDouble() * 10;
       xmlString +=
-          '<trkpt lat="${makeDoubleFuzzy(letter.lat)}" lon="${makeDoubleFuzzy(letter.lon)}"><ele>50.0</ele><time>${tempDate.toIso8601String()}</time></trkpt>';
-      tempDate = tempDate.add(Duration(minutes: Random().nextInt(10) + 3));
+          '<trkpt lat="${makeDoubleFuzzy(letter.lat)}" lon="${makeDoubleFuzzy(letter.lon)}"><ele>$randomElevation</ele><time>${tempDate.toIso8601String()}</time></trkpt>';
+      tempDate = tempDate.add(Duration(minutes: Random().nextInt(3) + 3));
     }
   }
 
